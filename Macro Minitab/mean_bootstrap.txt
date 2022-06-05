@@ -1,0 +1,21 @@
+macro
+
+mean_boot x r
+
+mconstant n i r mean_a j
+mcolumn x y mean1
+
+let n = count(x)
+
+do j = 1:r
+do i = 1:n
+sample i x y;
+replacement.
+enddo
+print y
+#let mean_a(j)= mean(y)
+enddo
+let mean_a = mean(y)
+print mean_a
+
+endmacro

@@ -1,0 +1,54 @@
+macro
+
+one_t x mu0 alpha s
+
+mconstant n alpha1 alpha i jumlah rata a s zhit ztab df pvalue p BB BA mu0
+mcolumn x
+
+let n = count(x)
+let alpha1=1-(alpha/2)
+
+#hitung rata
+let jumlah=0
+do i = 1:n
+let jumlah = jumlah+x(i)
+enddo
+let rata = jumlah/n
+
+let zhit = (rata-mu0)/(s/sqrt(n))
+
+invcdf alpha1 ztab;
+normal 0 1.
+print zhit ztab
+
+if abs(zhit) > ztab
+note 'Tolak H0. mu tidak sama dengan mu0'
+else
+note 'Gagal Tolak H0. mu sama dengan mu0'
+endif
+
+#hitung p value
+let zhit = abs(zhit)
+cdf zhit p;
+normal 0 1.
+let pvalue = 2*(1-p)
+print pvalue alpha
+if (pvalue < alpha)
+note Tolak H0, maka mu tidak sama dengan mu0
+else
+note Gagal Tolak H0, maka mu sama dengan mu0
+endif
+
+#hitung CI
+let BB = rata - (ztab*s/sqrt(n))
+let BA = rata + (ztab*s/sqrt(n))
+print BB BA
+
+if mu0 > BA or mu0 < BB
+note Tolak H0, maka mu tidak sama dengan mu0
+else
+note Gagal Tolak H0, maka mu sama degan mu0
+endif
+
+
+endmacro

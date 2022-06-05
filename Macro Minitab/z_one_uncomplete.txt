@@ -1,0 +1,48 @@
+macro
+z_one muo s alfa x
+mconstant n xbar s zhit muo alfa alfa1 ztabel p pvalue bb ba pvalue2
+mcolumn x
+
+let n = count(x)
+let xbar = mean(x)
+
+let zhit = (xbar-muo)/(s/sqrt(n))
+
+#hipotesis upper tail
+note hipotesis:
+note h0: mu = muo
+note h1: mu > muo
+
+let alfa1=1-alfa
+invcdf alfa1 ztabel;
+normal 0 1.
+print zhit ztabel
+
+if zhit>ztabel
+note Tolak H0, maka mu tidak sama dengan mu0
+else
+note Gagal Tolak H0, maka mu lebih dari mu0
+endif
+
+#menghitung p value
+cdf zhit p;
+normal 0 1.
+let pvalue = (1-p)
+print pvalue alfa
+if (pvalue < alfa)
+note Tolak H0, maka mu tidak sama dengan mu0
+else
+note Gagal Tolak H0, maka mu lebih dari mu0
+endif
+
+#selang kepercayaan
+let bb = xbar-(ztabel*s/sqrt(n))
+let ba = xbar+(ztabel*s/sqrt(n))
+print bb ba
+if bb < muo and muo < ba
+note Gagal Tolak H0, maka mu sama dengan mu0
+else
+note Tolak H0, maka mu lebih dari mu0
+endif
+
+endmacro

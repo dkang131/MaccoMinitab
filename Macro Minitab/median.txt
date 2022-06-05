@@ -1,0 +1,29 @@
+macro
+
+median x
+
+mconstant n i j a median
+mcolumn x
+
+let n = count(x)
+
+do i=1:n-1
+do j=i+1:n
+if x(i)>x(j)
+let a = x(j)
+let x(j) = x(i)
+let x(i) = a
+endif
+enddo
+enddo
+
+
+if mod(n,2)=1
+let median = x((n+1)/2)
+else
+let median = (x(n/2)+x((n/2)+1))/2
+endif
+
+print median
+
+endmacro

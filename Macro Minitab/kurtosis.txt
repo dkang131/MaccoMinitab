@@ -1,0 +1,29 @@
+macro
+
+runcing x
+
+mconstant n i jumlah xbar a j s c l kurtosis
+mcolumn x
+
+let n = count(x)
+let jumlah = 0
+do i = 1:n
+let jumlah = jumlah + x(i)
+enddo
+let xbar = jumlah/n
+
+#hitung stdev
+let a = 0
+do j = 1:n
+let a = a+((x(j)-xbar)^2)
+enddo
+let s = sqrt(a/(n-1))
+
+let c = 0
+do l = 1:n
+let c = c+(((x(l)-xbar)/s)^4)
+enddo
+let kurtosis = (n*(n+1)/((n-1)*(n-2)*(n-3))*c)-(3*((n-1)^2)/((n-2)*(n-3)))
+print kurtosis
+
+endmacro

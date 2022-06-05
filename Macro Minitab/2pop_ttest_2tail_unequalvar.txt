@@ -1,0 +1,61 @@
+macro
+
+t_two_test x y alpha mu0
+mconstant alpha mu0 n1 n2 xbar ybar s1 s2 var1 var2 s df t alpha1 ttab p pvalue BB BA
+mcolumn x y
+
+let n1 = count(x)
+let n2 = count(y)
+let xbar = mean(x)
+let ybar = mean(y)
+let s1 = stdev(x)
+let s2 = stdev(y)
+
+note jika varian dianggap beda
+let var1 = s1^2/n1
+let var2 = s2^2/n2
+let s = sqrt(var1+var2)
+let df = ((var1+var2)^2)/((var1^2/(n1-1))+(var2^2/(n2-1)))
+let t = ((xbar-ybar)-mu0)/s
+
+note Hipotesis:
+note H0 : m1-m2 = 0
+note H1 : m1-m2 <> 0
+
+#ttab
+let alpha1 = 1-(alpha/2)
+invcdf alpha1 ttab;
+T df.
+print t ttab
+
+if abs(t) > ttab
+note Reject H0. m1-m2 not equal 0
+else
+note Fail to Reject H0. m1-m2 equal 0
+endif
+
+#p-value
+let t = abs(t)
+cdf t p;
+T df.
+let pvalue = 2*(1-p)
+print pvalue alpha
+
+if (pvalue < alpha)
+note Reject H0. m1-m2 not equal 0
+else
+note Fail to Reject H0. m1-m2 equal 0
+endif
+
+#CI
+let BB = (xbar-ybar)-(ttab*s)
+let BA = (xbar-ybar)+(ttab*s)
+print BB BA
+
+if BB<mu0 and BA>mu0
+note Fail to Reject H0. m1-m2 equal 0
+else
+note Reject H0. m1-m2 not equal 0
+endif
+
+endmacro

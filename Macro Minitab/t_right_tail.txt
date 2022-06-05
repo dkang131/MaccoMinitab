@@ -1,0 +1,59 @@
+macro
+
+one_t x mu0 alpha
+
+mconstant n alpha1 alpha i jumlah rata a s thit ttab df pvalue p BB mu0
+mcolumn x
+
+let n = count(x)
+let alpha1=1-alpha
+
+#hipotesis
+note hipotesis:
+note h0 : mu = muo
+note h1 : mu > muo
+
+#hitung rata
+let jumlah=0
+do i = 1:n
+let jumlah = jumlah+x(i)
+enddo
+let rata = jumlah/n
+
+#hitung stdev
+let a = 0
+do i = 1:n
+let a = a+(x(i)-rata)^2
+enddo
+let s = sqrt(a/(n-1))
+
+let df = n-1
+let thit = (rata-mu0)/(s/sqrt(n))
+
+invcdf alpha1 ttab;
+T df.
+print thit ttab
+
+if thit > ttab
+note Tolak H0. mu lebih besar mu0
+else
+note Gagal Tolak H0. mu sama dengan atau lebih kecil dari mu0
+endif
+
+#hitung p value
+let thit = abs(thit)
+cdf thit p;
+T df.
+let pvalue = (1-p)
+print pvalue alpha
+if (pvalue < alpha)
+note Tolak H0. mu lebih besar mu0
+else
+note Gagal Tolak H0. mu sama dengan atau lebih kecil dari mu0
+endif
+
+#hitung CI
+let BB = rata - (ttab*s/sqrt(n))
+print BB
+
+endmacro

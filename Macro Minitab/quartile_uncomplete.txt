@@ -1,0 +1,70 @@
+macro
+
+quartile x
+
+mcolumn x
+mconstant i n j a max min q1 q1_ q1__ q3 q3_ q3__
+
+let n = count(x)
+let max = max(x)
+let min = min(x)
+
+print max min
+
+if mod(n,4)=1
+let q1 = x((n+1)/4)
+else
+let q1=(x(n/4)+x((n/4)+1))/2
+endif
+print q1
+
+if mod(n,4)=2
+let q1_=x((n+2)/4)
+else
+let q1_=(x(n/4)+x((n/4)+2))/2
+endif
+print q1_
+
+if mod(n,4)=3
+let q1__=x((n+3)/4)
+else
+let q1__=(x(n/4)+x((n/4)+3))/2
+endif
+print q1__
+
+if q1='*' and q1_='*'
+print q1__
+elseif q1='*' and q1__='*'
+print q1_
+else print q1
+endif
+
+if mod (3*n,4)=1
+let q3=x((3*n+1)/4)
+else
+let q3=(x(3*n/4)+x((3*n/4)+1))/2
+endif
+print q3
+
+if mod (3*n,4)=2
+let q3_=x((3*n+2)/4)
+else
+let q3_=(x(3*n/4)+x((3*n/4)+2))/2
+endif
+print q3_
+
+if mod (3*n,4)=3
+let q3__=x((3*n+3)/4)
+else
+let q3__=(x(3*n/4)+x((3*n/4)+3))/2
+endif
+print q3__
+
+if q3='*' and q3_='*'
+print q3__
+elseif q3='*' and q3__='*'
+print q3_
+else print q3
+
+endif
+endmacro

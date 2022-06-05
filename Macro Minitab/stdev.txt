@@ -1,0 +1,12 @@
+gmacro
+stdev
+Describe C1;
+ Mean;
+ SEMean;
+ StDeviation;
+ QOne;
+ Median;
+ QThree;
+ N;
+ NMissing.
+endmacro

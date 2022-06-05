@@ -1,0 +1,42 @@
+macro
+t_one x alfa muo
+mconstant n xbar s df thit thit1 muo alfa alfa1 ttabel p pvalue
+mcolumn x
+
+let n = count(x)
+let df = n-1
+let xbar = mean(x)
+let s = stdev(x)
+
+let thit = (xbar-muo)/(s/sqrt(n))
+
+#hipotesis
+note hipotesis:
+note h0 : mu = muo
+note h1 : mu <> muo
+
+let alfa1 = 1-(alfa/2)
+invcdf alfa1 ttabel;
+T df.
+print thit ttabel
+
+if abs(thit) > ttabel
+note Tolak H0, maka mu tidak sama dengan mu0
+else
+note Gagal Tolak H0, maka mu sama dengan mu0
+endif
+
+#menghitung p value
+let thit1 = abs(thit)
+cdf thit1 p;
+T df.
+let pvalue=2*(1-p)
+print pvalue alfa
+
+if pvalue < alfa
+note Tolak H0, maka mu tidak sama dengan mu0
+else
+note Gagal Tolak H0, maka mu sama dengan mu0
+endif
+
+endmacro

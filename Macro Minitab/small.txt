@@ -1,0 +1,15 @@
+gmacro
+small
+let k1 = mean(c1)
+let k2 = mean(c2)
+let k3 = mean(c3)
+if k1 < k2 and k1 < k3
+print k
+elseif k2 < k1 and k2 < k3
+print k2
+elseif k3 < k1 and k3 < k2
+print k3
+else
+note note:tidak ada nilai mean terkecil
+endif
+endmacro

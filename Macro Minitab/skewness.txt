@@ -1,0 +1,31 @@
+macro
+
+skewness x
+
+mconstant n i j k jumlah xbar a s c skewness
+mcolumn x
+
+#itung xbar
+let n = count(x)
+let jumlah = 0
+do i = 1:n
+let jumlah = jumlah + x(i)
+enddo
+let xbar = jumlah/n
+
+#hitung stdev
+let a = 0
+do j = 1:n
+let a = a+((x(j)-xbar)^2)
+enddo
+let s = sqrt(a/(n-1))
+
+#hitung skewness
+let c = 0
+do k = 1:n
+let c = c+(((x(k)-xbar)/s)^3)
+enddo
+let skewness = (n/((n-1)*(n-2)))*c
+print skewness
+
+endmacro

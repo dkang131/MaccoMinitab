@@ -1,0 +1,23 @@
+macro
+
+regression y x
+mconstant n ybar xbar i b1 b0 a b c d
+mcolumn y x 
+
+let n = count(y)
+let ybar = mean(y)
+let xbar = mean(x)
+
+let a = 0
+let b = 0
+do i = 1:n
+let a = a+((x(i)-xbar)*(y(i)-ybar))
+let b = b+((x(i)-xbar)^2)
+enddo
+
+let b1 = a/b
+let b0 = ybar-(b1*xbar)
+print b1 b0
+
+
+endmacro

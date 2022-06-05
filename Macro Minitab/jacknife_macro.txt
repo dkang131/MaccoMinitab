@@ -1,0 +1,76 @@
+macro
+
+jacknife x
+
+mconstant n m i j k sum bias rata_j sum1 se1 z xbar se_mean sum2 bias1 mvar_j var_x var_j p b c se2 se_var
+mcolumn x mj xj mk xk rata
+
+let n = count(x)
+
+let xbar = mean(x)
+
+do i = 1:n
+let xj = x
+delete i xj
+let m = count(xj)
+let sum = 0
+do j = i:m
+let sum = sum+xj(j)
+enddo
+let rata(i) = sum/m
+let mj(i) = rata(i)
+enddo
+
+let sum1 = 0
+do i = 1:n
+let sum1 = sum1+mj(i)
+enddo
+let rata_j = sum1/n
+
+let bias = (rata_j-xbar)
+
+#se mean
+let se1 = 0
+do i = 1:n
+let se1 = se1 + ((mj(i)-rata_j)^2)
+enddo
+let z = (n-1)/n
+let se_mean = sqrt(z*se1)
+
+print mj xbar rata_j bias se_mean
+
+#varian
+let var_x = (stdev(x))^2
+
+do i = 1:n
+let xk = x
+delete i xk
+let p = count(xk)
+let b = 0
+do j = 1:p
+let b = b +xk(j)
+enddo
+let c = 0
+do k = 1:p
+let c = c + ((xk(k)-(b/p))^2)
+enddo
+let mk(i) = c/(p-1)
+enddo
+
+let sum2 = 0
+do i = 1:n
+let sum2 = sum2 + mk(j)
+enddo
+let mvar_j = sum2/n
+let bias1 = abs(mvar_j-var_x)
+
+#se mean
+let se2 = 0
+do i = 1:n
+let se2 = se2 + ((mk(i)-mvar_j)^2)
+enddo
+let z = (n-1)/n
+let se_var = sqrt(z*se2)
+
+print mk var_x mvar_j bias1 se_var
+endmacro

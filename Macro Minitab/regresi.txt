@@ -1,0 +1,152 @@
+macro
+
+regression y x alpha
+mconstant n p alpha alpha1 alpha2 jumlah1 jumlah2 i xbar ybar pv pvalue z t a b sse ssr sst dfe yp mse msr fhit ftab ttab ai se_a pvalue_a pv_a thit_a bi se_b pvalue_b pv_b thit_b
+mcolumn y x
+
+let n = count(y)
+let p = 1
+let alpha1 = 1-(alpha)
+
+let jumlah1 = 0
+let jumlah2 = 0
+do i = 1:n
+let jumlah1 = jumlah1+x(i)
+let jumlah2 = jumlah2+y(i)
+enddo
+
+let xbar = jumlah1/n
+let ybar = jumlah2/n
+
+let z = 0
+let t = 0
+do i = 1:n
+let z = z+((x(i)-xbar)*(y(i)-ybar))
+let t = t+((x(i)-xbar)^2)
+enddo
+
+let b = z/t
+let a = ybar-(b*xbar)
+
+note nilai koefisien regresi
+print a b
+
+#anova
+let ssr = 0
+let yp = 0
+do i = 1:n
+let yp = yp+(a+(b*x(i)))
+let ssr = ssr+(((a+(b*x(i)))-ybar)^2)
+enddo
+
+let sse = 0
+let sst = 0
+do i = 1:n
+let sse = sse+((y(i)-(a+(b*x(i))))^2)
+let sst = sst+((y(i)-ybar)^2)
+enddo
+
+let dfe = n-p-1
+let msr = ssr/p
+let mse = sse/dfe
+
+print ssr sse sst msr mse
+
+let fhit = msr/mse
+
+note _____________________________________
+#uji serentak
+note uji serentak
+invcdf alpha1 ftab;
+F p dfe.
+print fhit ftab
+
+if abs(fhit)>ftab
+note tolak H0, maka koefisien parameter regresi signifikan
+else
+note gagal tolak H0
+endif
+
+#pvalue
+let fhit = abs(fhit)
+cdf fhit pv;
+F p dfe.
+let pvalue = 1-pv
+print pvalue alpha
+
+if (pvalue < alpha)
+note tolak H0
+else
+note gagal tolak h0
+endif
+
+note _______________________________________
+#uji parsial a
+note uji parsial intersep
+let alpha2 = 1-(alpha/2)
+
+let ai = 0
+do i = 1:n
+let ai = ai+((x(i)-xbar)^2)
+enddo
+
+let se_a = sqrt(mse/ai)
+let thit_a = a/se_a
+invcdf alpha2 ttab;
+T dfe.
+print se_a thit_a ttab
+
+if abs(thit_a)>ttab
+note tolak H0
+else
+note gagal tolak H0
+endif
+
+#pvalue a
+let thit_a = abs(thit_a)
+cdf thit_a pv_a;
+T dfe.
+let pvalue_a = 2*(1-pv_a)
+print pvalue_a alpha
+
+if (pvalue_a < alpha)
+note tolak H0
+else
+note gagal tolak H0
+endif
+
+note ________________________________________
+#uji parsial b
+note uji parsial slope
+let alpha2 = 1-(alpha/2)
+
+let bi = 0
+do i = 1:n
+let bi = bi+((x(i)-xbar)^2)
+enddo
+
+let se_b = sqrt(mse/bi)
+let thit_b = b/se_b
+invcdf alpha2 ttab;
+T dfe.
+print se_b thit_b ttab
+
+if abs(thit_b)>ttab
+note tolak H0
+else
+note gagal tolak H0
+endif
+
+#pvalue b
+let thit_b = abs(thit_b)
+cdf thit_b pv_b;
+T dfe.
+let pvalue_b = 2*(1-pv_b)
+print pvalue_b alpha
+
+if (pvalue_b < alpha)
+note tolak H0
+else
+note gagal tolak H0
+endif
+endmacro

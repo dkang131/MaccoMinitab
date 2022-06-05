@@ -1,0 +1,19 @@
+macro
+rata x1 x2 x3
+mconstant n sum1 sum2 sum3 i mean1 mean2 mean3
+mcolumn x1 
+
+let n = count(x1)
+let sum1 = 0
+let sum2 = 0
+let sum3 = 0
+do i=i:n
+let sum1 = sum1+x1(i)
+let sum2 = sum2+x2(i)
+let sum3 = sum3+x3(i)
+enddo
+let mean1 = sum1/n
+let mean2 = sum2/n
+let mean3 = sum3/n
+print n sum1 sum2 sum3 mean1 mean2 mean3
+endmacro

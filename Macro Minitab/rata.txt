@@ -1,0 +1,16 @@
+macro
+
+rata x
+
+mconstant n i jumlah ratarata
+mcolumn x
+
+let n = count(x)
+let jumlah = 0
+do i = 1:n
+let jumlah = jumlah+x(i)
+enddo
+let ratarata = jumlah/n
+print jumlah ratarata
+
+endmacro

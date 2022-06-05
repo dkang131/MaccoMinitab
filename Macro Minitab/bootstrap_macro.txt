@@ -1,0 +1,57 @@
+macro
+
+bootstrap y b 
+
+mconstant n i j k sum rata_bs rata_y a b c r jumlah sum1 rata_y3 var_y var_bs
+mcolumn y l1 l2 y2 rata j1 j2 y3 var
+
+let n=count(y)
+let rata_y = mean(y)
+let var_y = (stdev(y))^2
+
+do i = 1:n
+let l1(i) = i
+enddo
+print l1
+
+do i = 1:b
+sample n l1 l2;
+replacement.
+do j = 1:n
+let a = l2(j)
+let y2(j) = y(a)
+enddo
+let sum = 0
+do k = 1:n
+let sum = sum+y2(k)
+enddo
+let rata(i) = sum/n
+enddo
+print l2
+print y2
+
+let rata_bs = mean(rata)
+
+print rata_y rata rata_bs
+
+do i = 1:b
+sample n l1 l2;
+replacement.
+do j = 1:n
+let c = l2(j)
+let y3(j) = y(c)
+enddo
+let sum1 = 0
+do k = 1:n
+let sum1 = sum1 + ((y3(k)-mean(y3))^2)
+enddo
+let var(i) = sum1/(n-1)
+enddo
+print l2
+print y3
+
+let var_bs = mean(var)
+
+print var_y var_bs var
+
+endmacro
