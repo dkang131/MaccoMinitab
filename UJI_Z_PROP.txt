@@ -1,0 +1,46 @@
+MACRO
+
+UJI_Z_PROP X1 X2 N1 N2 ALPHA
+
+MCONSTANT X1 X2 N1 N2 ALPHA ALPHA1 P P1 P2 ZHIT ZTAB PV PVALUE 
+
+note HIPOTESIS
+note H0 : P1 = P2
+note H1 : P1 <> P2
+
+LET ALPHA1=1-ALPHA
+
+LET P = (X1+X2)/(N1+N2)
+
+LET P1 = X1/N1
+LET P2 = X2/N2
+
+LET ZHIT = (P1-P2)/SQRT(P*(1-P)*((1/N1)+(1/N2)))
+
+NOTE ________________________________________________________________________
+invcdf ALPHA1 ztab;
+	normal 0 1.
+print zhit ztab
+
+if (abs(zhit)>ztab)
+note'Tolak H0, maka P1 tidak sama dengan P2'
+else
+note 'Gagal Tolak H0, maka P1 sama dengan P2'
+ENDIF
+
+NOTE ________________________________________________________________________
+let zhit=abs(zhit)
+CDF zhit pv;
+	normal 0 1.
+let pvalue=2*(1-pv)
+print pvalue alpha
+
+if (pvalue<alpha)
+note'Tolak H0, maka P1 tidak sama dengan P2'
+else
+note 'Gagal Tolak H0, maka P1 sama dengan P2'
+endif
+NOTE ________________________________________________________________________
+
+
+endmacro

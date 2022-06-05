@@ -1,0 +1,92 @@
+MACRO
+
+TWO_T_VARSAMA X Y D0 ALPHA
+
+MCONSTANT MU0 N1 N2 I S1 S2 SX SY SP S D0 C A B JUMLAH SUM THIT ALPHA ALPHA1 TTAB RATA1 RATA2 P PVALUE BB BA
+MCOLUMN X Y
+
+# VARIANS TIDAK DIKETAHUI #
+
+LET N1=COUNT(X) # jumlah data 1
+LET N2=COUNT(Y) # jumlah data 2
+LET ALPHA1=1-(ALPHA/2) # tingkat kepercayaan
+
+# mean data 1
+LET JUMLAH=0
+DO I=1:N1
+LET JUMLAH=JUMLAH+X(I)
+ENDDO
+LET RATA1=JUMLAH/N1
+
+# mean data 2
+LET SUM=0
+DO I=1:N2
+LET SUM=SUM+Y(I)
+ENDDO
+LET RATA2=SUM/N2
+
+# st dev data 1
+LET A=0
+DO I=1:N1
+LET A=A+(X(I)-RATA1)^2
+ENDDO
+LET S1=SQRT(A/(N1-1))
+
+# st dev data 2
+LET B=0
+DO I=1:N2
+LET B=B+(Y(I)-RATA2)^2
+ENDDO
+LET S2=SQRT(B/(N2-1))
+
+# perhitungan Sp
+LET SX=(N1-1)*(S1^2)
+LET SY=(N2-1)*(S2^2)
+
+LET C=N1+N2-2
+LET SP=(SX+SY)/C
+
+# perhitungan penyebut
+LET S=(SQRT(SP))*(SQRT((1/N1)+(1/N2)))
+PRINT S
+
+# t hitung
+LET THIT = ((RATA1-RATA2)/(S))
+
+# t tabel
+INVCDF ALPHA1 TTAB;
+	T C.
+PRINT THIT TTAB
+
+# keputusan
+IF ABS(THIT) > TTAB
+NOTE 'TOLAK H0, MAKA MU1 TIDAK SAMA DENGAN MU2'
+ELSE
+NOTE 'GAGAL TOLAK H0, MAKA MU1 SAMA DENGAN MU2'
+ENDIF
+
+#menghitung p-value
+let thit=abs(thit)
+CDF thit p;
+T C.
+let pvalue=2*(1-p)
+print pvalue alpha
+if (pvalue < alpha)
+note 'TOLAK H0, MAKA MU1 TIDAK SAMA DENGAN MU2'
+else
+note 'GAGAL TOLAK H0, MAKA MU1 SAMA DENGAN MU2'
+endif
+
+let mu0=rata1-rata2
+
+#selang kepercayaan
+let BB = MU0 - (ttab*s)
+let BA = MU0 + (ttab*s)
+print BB BA
+if D0> BA or D0< BB
+note 'TOLAK H0, MAKA MU1 TIDAK SAMA DENGAN MU2'
+else
+note 'GAGAL TOLAK H0, MAKA MU1 SAMA DENGAN MU2'
+endif
+
+ENDMACRO

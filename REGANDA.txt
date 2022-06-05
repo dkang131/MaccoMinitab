@@ -1,0 +1,141 @@
+MACRO
+
+REGANDA x.1-x.p y alfa
+
+MCONSTANT n ybar SSR SSE SST dfr dfe dft MSR MSE Fhit pv pvalue btxty yty a Ftab alfa a1 ttab n1 i pv1 thita
+MCOLUMN x.1-x.p y satu b varbj SEbj thit pvalue1
+MMATRIX mx my xt xtx xtxi xty bt btxt yt varkov
+
+#HITUNG PARAMETER
+let n=count(y)
+
+#Membuat vektor satuaan
+Set satu
+1( 1 : 1 / 1)n
+end.
+
+Copy satu x.1-x.p mx
+Copy y my
+
+Transpose mx xt
+Mult xt mx xtx
+Invert xtx xtxi
+Mult xt my xty
+Mult xtxi xty b
+
+note ESTIMASI KOEFISIEN REGRESI
+print b
+
+#TABEL ANOVA
+let ybar=mean(y)
+
+Transpose b bt
+Mult bt xt btxt
+Mult btxt my btxty
+let SSR=btxty-n*ybar**2
+Transpose my yt
+Mult yt my yty
+let SST=yty-n*ybar**2
+let SSE=SST-SSR
+
+let dfr=p
+let dfe=n-p-1
+let dft=n-1
+
+let MSR=SSR/dfr
+let MSE=SSE/dfe
+
+let Fhit=MSR/MSE
+
+CDF Fhit pv;
+F dfr dfe.
+
+let pvalue=1-pv
+
+NOTE ANOVA
+print dfr dfe dft SSR SSE SST MSR MSE Fhit pvalue
+
+#UJI SERENTAK
+let a=1-alfa
+InvCDF a Ftab;
+F dfr dfe.
+
+NOTE UJI SERENTAK
+NOTE HIPOTESIS
+NOTE H0: b1=b2=...=bk=0
+NOTE H1: Minimal terdapat satu bj >< 0, j=1,2,...,k
+NOTE
+NOTE STATISTIK UJI
+print Fhit Ftab pvalue alfa
+NOTE Daerah Penolakan: Tolak H0 jika Fhit > Ftab
+
+If Fhit > Ftab
+	NOTE Keputusan: Tolak H0
+Else
+	NOTE Keputusan: Gagal Tolak H0
+endif
+
+NOTE
+NOTE Daerah Penolakan: Tolak H0 jika pvalue < alfa
+
+If pvalue < alfa
+	NOTE Keputusan: Tolak H0
+Else
+	NOTE Keputusan: Gagal Tolak H0
+endif
+NOTE
+
+#UJI PARSIAL
+NOTE UJI PARSIAL
+NOTE HIPOTESIS
+NOTE H0: b(i) = 0
+NOTE H1: b(i) >< 0
+NOTE
+
+Mult xtxi MSE varkov
+Diag varkov varbj
+let SEbj=sqrt(varbj)
+
+let thit=b/SEbj
+
+let a1=1-alfa/2
+invcdf a1 ttab;
+T dfe.
+
+let n1 = count(b)
+
+let thita=0
+do i=1:n1
+	let thita=abs(thit(i))
+	CDF thita pv1;
+	T dfe.
+	let pvalue1(i)=2*(1-pv1)
+ENDDO
+
+NOTE STATISTIK UJI
+print SEbj thit ttab pvalue1 alfa
+
+let thita=0
+do i=1:n1
+	NOTE Daerah penolakan: Tolak H0 jika thit > ttab
+	let thita=abs(thit(i))
+	If thita > ttab
+		NOTE Keputusan: Tolak H0
+	Else
+		NOTE Keputusan: Gagal Tolak H0
+	ENDIF
+
+	NOTE Daerah penolakan: Tolak H0 jika pvalue < alfa
+	If pvalue1(i) < alfa
+		NOTE Keputusan: Tolak H0
+	Else
+		NOTE Keputusan: Gagal Tolak H0
+	ENDIF
+	NOTE
+ENDDO
+
+ENDMACRO
+
+
+
+
