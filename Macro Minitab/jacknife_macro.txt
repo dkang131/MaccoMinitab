@@ -59,7 +59,7 @@ enddo
 
 let sum2 = 0
 do i = 1:n
-let sum2 = sum2 + mk(j)
+let sum2 = sum2 + mk(i)
 enddo
 let mvar_j = sum2/n
 let bias1 = abs(mvar_j-var_x)
