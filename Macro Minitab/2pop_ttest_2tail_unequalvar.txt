@@ -52,10 +52,10 @@ let BB = (xbar-ybar)-(ttab*s)
 let BA = (xbar-ybar)+(ttab*s)
 print BB BA
 
-if BB<mu0 and BA>mu0
-note Fail to Reject H0. m1-m2 equal 0
-else
+if mu0>BA or mu0<BB
 note Reject H0. m1-m2 not equal 0
+else
+note Fail to Reject H0. m1-m2 equal 0
 endif
 
 endmacro

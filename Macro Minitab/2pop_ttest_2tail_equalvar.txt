@@ -1,7 +1,7 @@
 macro
 
 t_two_test x y alpha mu0
-mconstant alpha mu0 n1 n2 xbar ybar s1 s2 a b c sp df t alpha1 ttab p pvalue BB BA i d
+mconstant alpha mu0 n1 n2 xbar ybar s1 s2 a b c sp df t alpha1 ttab p pvalue BB BA i d s
 mcolumn x y
 
 let n1 = count(x)
@@ -30,7 +30,8 @@ let a = ((n1-1)*(s1*s1))+((n2-1)*(s2*s2))
 let df = (n1+n2-2)
 let sp = sqrt(a/df)
 print sp
-let t = ((xbar-ybar)-mu0)/(sp*sqrt((1/n1)+(1/n2)))
+let s = sp*(sqrt((1/n1)+(1/n2)))
+let t = ((xbar-ybar)-mu0)/s
 
 note Hipotesis:
 note H0 : m1-m2 = 0
@@ -63,8 +64,8 @@ endif
 
 #CI
 let d = xbar-ybar
-let BB = d-(ttab*sp)
-let BA = d+(ttab*sp)
+let BB = d-(ttab*s)
+let BA = d+(ttab*s)
 print BB BA
 
 if mu0>BA or mu0<BB
